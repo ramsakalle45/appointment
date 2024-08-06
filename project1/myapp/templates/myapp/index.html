@@ -1,0 +1,19 @@
+<html>
+  <head>
+    <title>jQuery Page</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+  <script>
+    $(document).ready(function(){
+      $("button").click(function(){
+        alert(("Author: ")+$("#home").data("author-name"))
+        alert(("Year: ")+$("#home").data("year"))
+      });
+    });
+  </script>
+  </head>
+  <body>
+    <p>Click on the button to see the result</p>
+    <div id="home" data-author-name="Ram" data-year="2000"></div>
+    <button>Get Data</button>
+  </body>
+</html>

@@ -1,0 +1,51 @@
+<html>
+  <head>
+    <title>Home Page</title>
+    <style>
+      table, td, th{
+        border:1px solid;
+        text-align:center;
+        
+      }
+      table{
+        width:100%;
+      }
+      th{
+        height:70px;
+      }
+      input{
+        border:1px solid;
+        
+      }
+
+    </style>
+  </head>
+  <body>
+
+    <h1>Welcome to home page</h1>
+    <form action = "" method = "GET">
+      {% csrf_token %}
+      <label for="your_name">Your name: </label>
+      <input id="your_name" type="text" name="your_name">
+      <input type="submit" value="OK">
+    </form>
+    
+    <table>
+      <tr>
+        <th>Company</th>
+        <th>Contact</th>
+        <th>Country</th>
+      </tr>
+      <tr>
+        <td>Raahi</td>
+        <td>99999</td>
+        <td>india</td>
+      </tr>
+      <tr>
+        <td>Ram</td>
+        <td>898989</td>
+        <td>india</td>
+      </tr>
+    </table>
+  </body>
+</html>
