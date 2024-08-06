@@ -112,6 +112,24 @@ class PatientView(APIView):
             return Response({"status": "error", "data": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)  
 
 
+    def patch(self, request, id=None):
+
+        result=Patient.objects.get(id=id)
+        serializer=PatientSerializer(result, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"status": "success", "data":serializer.data})
+        else:
+            return Response({"status": "error", "data":serializer.errors})
+        
+
+
+    def delete(self, request, id=None):
+        result=get_object_or_404(Patient, id=id)
+        result.delete()
+        return Response({"status":"success", "data":"Data Deleted"})
+
+
 
 
 
