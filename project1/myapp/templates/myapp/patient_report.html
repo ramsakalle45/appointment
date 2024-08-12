@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Patient Reports</title>
+</head>
+<body>
+    <h2>Enter Patient ID</h2>
+    <form method="POST" action="{% url 'myapp:patient_report' %}">
+        {% csrf_token %}
+        <input type="number" name="patient_id" required>
+        <button type="submit">Fetch Reports</button>
+    </form>
+
+    {% if patient %}
+        <h2>Reports for {{ patient.patient_id }}</h2>
+        <ul>
+            {% if reports %}
+                {% for report in reports %}
+                    <li>
+                        <a href="{{ report.report_file.url }}">{{ report.report_name }}</a>
+                        (Uploaded on: {{ report.upload_date }})
+                    </li>
+                {% endfor %}
+            {% else %}
+                <li>No reports found for this patient.</li>
+            {% endif %}
+        </ul>
+    {% endif %}
+
+</body>
+</html>

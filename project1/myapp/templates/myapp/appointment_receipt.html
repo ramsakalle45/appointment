@@ -10,7 +10,7 @@
             padding: 20px;
         }
 
-        h2 {
+        /*h2 {
             font-family: Georgia, serif;
             font-size: 24px;
             margin-bottom: 10px;
@@ -20,8 +20,11 @@
             font-family: Georgia, serif;
             font-size: 16px;
             margin-bottom: 5px;
+        }*/
+        a{
+            
+            font-family: Georgia;
         }
-
         strong {
             font-weight: bold;
         }
@@ -31,10 +34,23 @@
             padding: 20px;
             margin-top: 20px;
         }
+
+        /* ... other styles ... */
+    .download-button {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #171c64; /* Green */
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+    }
     </style>
 </head>
 <body>
-    <h2>Patient Entry Receipt</h2>
+    <form>
+        <a href="{% url 'myapp:patient_entry' %}"> GO BACK TO ENTRY PAGE</a>
+    </form>
+    <!-- <h2>Patient Entry Receipt</h2>
 
     <p><strong>Patient Name:</strong> {{ patient.patient_name }}</p>
     <p><strong>Blood Group:</strong> {{ patient.blood_group }}</p>
@@ -42,10 +58,11 @@
     <p><strong>Disease:</strong> {{ patient.disease }}</p>
     <p><strong>Doctor Name:</strong> {{ patient.doctor_name }}</p>
     <p><strong>Mobile Number:</strong> {{ patient.mobile_number }}</p>
-    <p><strong>Date:</strong> {{ patient.on_date }}</p>
+    <p><strong>Date:</strong> {{ patient.on_date }}</p> -->
 
     <div class="invoice-container">
         <h2>Invoice</h2>
+        <p><strong>Patient_ID:</strong>{{invoice.patient_id}}</p>
         <p><strong>Invoice Number:</strong> {{ invoice.invoice_number }}</p>
         <p><strong>Invoice Date:</strong> {{ invoice.invoice_date }}</p>
         <p><strong>Patient Name:</strong> {{ invoice.patient_name }}</p>
@@ -58,5 +75,6 @@
         <p><strong>Items:</strong> {{ invoice.items }}</p>
         <p><strong>Total Amount:</strong> Rs. {{ invoice.total_amount }}</p>
     </div>
+    <a href="{% url 'myapp:appointment_receipt' patient.id %}" class="download-button">Download Invoice</a>
 </body>
 </html>

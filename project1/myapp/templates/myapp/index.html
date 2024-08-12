@@ -1,4 +1,4 @@
-<html>
+<!-- {% comment %} <html>
   <head>
     <title>jQuery Page</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
@@ -16,4 +16,44 @@
     <div id="home" data-author-name="Ram" data-year="2000"></div>
     <button>Get Data</button>
   </body>
+</html> {% endcomment %} -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Appollo Hospital</title>
+  <style>
+    h2 {
+text-align: center;
+border-radius: 1px;
+font-family: georgia;
+
+    }
+    p[id="Appointment"]{
+      text-align: right;
+    }
+    button[id="get_appt"]{
+float: right;
+    
+    }
+
+  </style>
+</head>
+<body>
+  <h2>Appollo Hospital</h2>
+  <form method="post" action="{% url 'myapp:patient_entry' %}">
+    <p id="Appointment">Click here to get the Appointment</p>
+    {% csrf_token %}
+  
+    <button id="get_appt" type="submit">Get Appointment</button>
+    
+  </form>
+  <form method="post" action="{% url 'admin:index' %}">
+    {% csrf_token %}
+    <p>Staff Login</p>
+    <button id="staff" type="submit">Staff Login</button>
+
+  </form>
+</body>
 </html>
