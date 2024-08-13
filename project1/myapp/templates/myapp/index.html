@@ -24,35 +24,47 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Appollo Hospital</title>
   <style>
+   
     h2 {
 text-align: center;
 border-radius: 1px;
 font-family: georgia;
 
     }
-    p[id="Appointment"]{
-      text-align: right;
+    a[id="Appointment"]{
+      text-align: left;
+      font-family: Georgia;
     }
-    button[id="get_appt"]{
-float: right;
-    
+    a[id="staff"]{
+      align-items: right;
+      font-family: Georgia;
     }
 
+    a[id='report']{
+      text-align: left;
+      font-family: Georgia;
+    }
+    
+    body{
+      background-color: rgba(103, 243, 196, 0.778);
+      font-family: Georgia;
+      
+    }
   </style>
 </head>
 <body>
   <h2>Appollo Hospital</h2>
-  <form method="post" action="{% url 'myapp:patient_entry' %}">
-    <p id="Appointment">Click here to get the Appointment</p>
-    {% csrf_token %}
-  
-    <button id="get_appt" type="submit">Get Appointment</button>
+
+    <a id="Appointment" href="{% url 'myapp:patient_entry' %}">Click here to get the Appointment</a>
+    <br>
+    <br>
+    <a id="report" href="{% url 'myapp:download_report' %}">Download Reports</a>
+    <br>
+    <br>
+    <a id="staff" href="{% url 'admin:index' %}">Staff Login</a>
     
-  </form>
-  <form method="post" action="{% url 'admin:index' %}">
-    {% csrf_token %}
-    <p>Staff Login</p>
-    <button id="staff" type="submit">Staff Login</button>
+    
+    
 
   </form>
 </body>

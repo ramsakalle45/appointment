@@ -8,7 +8,7 @@ from weasyprint import HTML
 from weasyprint.css import CSS
 from django.shortcuts import HttpResponse
 from django.urls import reverse
-from random import randint
+
 from django.contrib.auth.decorators import login_required, user_passes_test
 from . import forms,models
 from django.contrib.auth.models import Group
@@ -85,18 +85,27 @@ def process_patient_entry(request):
         return render(request, 'myapp/appointment_receipt.html', {'patient': patient, 'invoice': invoice}) 
 
 def download_report(request):
+    import pdb; pdb.set_trace()
+    """Fetches patient reports based on patient_id entered manually."""
+   
+    reports = None
+    patient_id = None
+    if request.method == 'POST':
+        patient_id = request.POST.get('patient_id')
+        if patient_id:
+            reports = UploadReport.objects.filter(patient_id=patient_id)  # Fetch reports based on patient_id
+    context = {
+        'reports': reports,
+        'patient_id': patient_id,  # Pass the patient_id to the template
+    }
+    return render(request, 'myapp/patient_report.html', context)
 
-    if request.method=='POST':
-        patient_id=request.POST.get('patient_id')
-        report_name=request.POST.get('report_name')
-        reports=request.POST.get('reports')
-        upload_date=request.POST.get('upload_date')
-
-        report=UploadReport(
-            patient_id=patie
-        )
-
+def get_report(request, report_id):
     
+    report=get_object_or_404(UploadReport, pk=report_id)
+    response=HttpResponse(report.reports.read(),content_type="application/pdf" )
+    response['Content-Disposition']=f'attachment; filename="{report.report_name}"'
+    return response
 
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
@@ -124,6 +133,7 @@ def appointment_receipt(request, patient_id):
     c.drawString(inch, 10.5 * inch, "Appointment Receipt")
 
     # Draw patient information
+    c.drawString(inch, 11* inch, f"Patient ID: {invoice.id}")
     c.drawString(inch, 10 * inch, f"Patient Name: {patient.patient_name}")
     c.drawString(inch, 9.5 * inch, f"Blood Group: {patient.blood_group}")
     c.drawString(inch, 9 * inch, f"Age: {patient.patient_age}")

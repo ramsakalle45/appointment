@@ -25,7 +25,8 @@ urlpatterns = [
     path('api/<int:id>/update/', views.PatientView.as_view()),
     path('api/invoices/', views.InvoiceView.as_view(), name="invoice_list" ),
     path('api/reports/', views.ReportView.as_view(), name="report"),
-    path('patient-reports/', views.download_report, name='patient_reports'),
+    path('download-report/', views.download_report, name='download_report'),
+    path('get-report/<int:report_id>/', views.get_report, name='get_report'),
 
 
 

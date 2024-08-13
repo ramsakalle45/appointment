@@ -15,11 +15,11 @@ class Patient(models.Model):
     on_date=models.DateField(null=True, blank=True)
 
     def __str__(self):
-        return f"{self.patient_name} - {self.blood_group}"
+        return f"{self.patient_name} - {self.disease}"
     
 class Invoice(models.Model):
     patient= models.ForeignKey(Patient, on_delete=models.CASCADE)
-    # patient_id=models.CharField(max_length=200, unique=True)
+    
     patient_name = models.CharField(max_length=200, null=True,
    blank=True)
     blood_group = models.CharField(max_length=200, null=True,
@@ -41,7 +41,7 @@ class Invoice(models.Model):
 class UploadReport(models.Model):
     patient_id=models.IntegerField(null=True, blank=True)
     report_name = models.CharField(max_length=200, null=True, blank=True)
-    reports = models.FileField(null=True, upload_to='patient_report/')  # Store the report file
+    reports = models.FileField(null=True, upload_to='download_report/')  # Store the report file
     upload_date = models.DateTimeField(null=True, blank=True)  # Record upload date
     def __str__(self):
         return f"{self.report_name} - {self.patient_id}"
