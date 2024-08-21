@@ -1,63 +1,20 @@
 <!DOCTYPE html>
-
-<html lang="en" dir="ltr">
-
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">  <title>Admin Signup Page</title>
-  <style>
-  body {
-    color: #aa082e;
-    background-color: #b6bde7;
-    font-family: 'Roboto', sans-serif;
-  }
-
-  a:link {
-    text-decoration: none;
-  }
-
-  .note {
-    text-align: center;
-    height: 80px;
-    background: -webkit-linear-gradient(left, #0072ff, #8811c5);
-    color: #fff;
-    font-weight: bold;
-    line-height: 80px;
-  }
-
-  .form-content {
-    padding: 5%;
-    border: 1px solid #ced4da;
-    margin-bottom: 2%;
-  }
-
-  .form-control {
-    border-radius: 1.5rem;
-  }
-
-  .btnSubmit {
-    border: none;
-    border-radius: 1.5rem;
-    padding: 1%;
-    width: 20%;
-    cursor: pointer;
-    background: #0062cc;
-    color: #fff;
-  }
-</style>
-
+    <meta charset="UTF-8">
+    <title>Signup</title>
 </head>
 <body>
- <!--- signup page for admin  ---------->
- <form method="post">
-  {% csrf_token %}
-  
-        <button type="submit" class="btnSubmit">Submit</button>
-        <div class="text-center">Already have an account? <a href="myapp/adminlogin">Login here</a></div>
-      </div>
-    </div>
-  </div>
-
-</form>
+    <h2>Signup</h2>
+    {% if messages %}
+        {% for message in messages %}
+            <p{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Signup</button>
+    </form>
 </body>
 </html>

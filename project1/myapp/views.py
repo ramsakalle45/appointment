@@ -1,40 +1,66 @@
 from django.db import models
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponseRedirect
 import datetime
-from .models import Patient, Invoice, UploadReport  
+from .models import Patient, Invoice, UploadReport, CustomUser, Doctor, Discharge_Summary
 from django.utils.crypto import get_random_string
 import random
 from weasyprint import HTML
 from weasyprint.css import CSS
 from django.shortcuts import HttpResponse
 from django.urls import reverse
+from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib import messages
 
-from django.contrib.auth.decorators import login_required, user_passes_test
-from . import forms,models
-from django.contrib.auth.models import Group
 
-
+def index(request):
+    # print(request.GET)
+    return render(request,"myapp/index.html")
+ 
 
 #for showing signup/login button for admin
 
-def admin_click_view(request):
-    if request.user.is_authenticated:
-        return HttpResponseRedirect('afterlogin')
-    return render(request,'myapp/patient_detail_upload.html')    
-
-def admin_signup_view(request):
-    form=forms.AdminSigupForm()
-    if request.method=='POST':
-        form=forms.AdminSigupForm(request.POST)
+def signup(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
         if form.is_valid():
-            user=form.save()
-            user.set_password(user.password)
-            user.save()
-            my_admin_group = Group.objects.get_or_create(name='ADMIN')
-            my_admin_group[0].user_set.add(user)
-            return HttpResponseRedirect('myapp/adminlogin')
-    return render(request,'myapp/adminsignup.html',{'form':form})
+            user = form.save()  # Save the new user
+            login(request, user)  # Log the user in
+            messages.success(request, 'Account created successfully.')
+            return redirect(reverse('myapp:login'))  # Redirect to login page
+        else:
+            messages.error(request, 'Invalid signup details.')
+            return render(request, 'myapp/adminsignup.html', {'form': form})
+    else:
+        form = UserCreationForm()
+        return render(request, 'myapp/adminsignup.html', {'form': form})
+    
+def login_view(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            email = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=email, password=password)
+            if user is not None:
+                login(request, user)
+                messages.success(request, 'Login successful.')
+                return render(request, 'myapp/patient_report.html')  # Redirect to admin panel
+            else:
+                messages.error(request, 'Invalid credentials.')
+                return render(request, 'myapp/adminlogin.html', {'form': form})
+        else:
+            messages.error(request, 'Invalid credentials.')
+            return render(request, 'myapp/adminlogin.html', {'form': form})
+    else:
+        form = AuthenticationForm()
+        return render(request, 'myapp/adminlogin.html', {'form': form})
+    
 
+def logout_view(request):
+    logout(request)
+    messages.success('Loggedout successfuly')
+    return redirect('myapp:home')    
 
 
 def patient_entry(request):
@@ -55,6 +81,7 @@ def process_patient_entry(request):
                         patient_name=patient_name, 
                         blood_group=blood_group, 
                         patient_age=patient_age,
+                        department=department,
                         disease=disease, 
                         doctor_name=doctor_name,
                         mobile_number=mobile_number,
@@ -74,6 +101,7 @@ def process_patient_entry(request):
                         patient_name=patient_name,
                         blood_group=blood_group,
                         patient_age=patient_age,
+                        department=department,
                         disease=disease,
                         doctor_name=doctor_name,
                         mobile_number=mobile_number,
@@ -85,7 +113,7 @@ def process_patient_entry(request):
         return render(request, 'myapp/appointment_receipt.html', {'patient': patient, 'invoice': invoice}) 
 
 def download_report(request):
-    import pdb; pdb.set_trace()
+
     """Fetches patient reports based on patient_id entered manually."""
    
     reports = None
@@ -130,15 +158,17 @@ def appointment_receipt(request, patient_id):
     body_style = styles['Normal']
 
     # Draw invoice header
-    c.drawString(inch, 10.5 * inch, "Appointment Receipt")
+    c.drawString(inch, 11.5 * inch, "Appointment Receipt")
 
     # Draw patient information
-    c.drawString(inch, 11* inch, f"Patient ID: {invoice.id}")
-    c.drawString(inch, 10 * inch, f"Patient Name: {patient.patient_name}")
-    c.drawString(inch, 9.5 * inch, f"Blood Group: {patient.blood_group}")
-    c.drawString(inch, 9 * inch, f"Age: {patient.patient_age}")
-    c.drawString(inch, 8.5 * inch, f"Disease: {patient.disease}")
-    c.drawString(inch, 8 * inch, f"Doctor: {patient.doctor_name}")
+    c.drawString(inch, 11 * inch, f"Patient ID: {invoice.id}")
+    c.drawString(inch, 10.5 * inch, f"Patient Name: {patient.patient_name}")
+    c.drawString(inch, 10 * inch, f"Blood Group: {patient.blood_group}")
+    c.drawString(inch, 9.5 * inch, f"Age: {patient.patient_age}")
+    c.drawString(inch, 9 * inch, f"Disease: {patient.disease}")
+    c.drawString(inch, 8.5 * inch, f"Doctor: {patient.doctor_name}")
+    
+    c.drawString(inch, 8 * inch, f"Doctor: {patient.department}")
     c.drawString(inch, 7.5 * inch, f"Mobile Number: {patient.mobile_number}")
 
     # Draw invoice details
@@ -277,10 +307,7 @@ class ReportView(APIView):
 
 
 
-def index(request):
-    print(request.GET)
-    return render(request,"myapp/index.html")
-    # return HttpResponse(request,"hi")
+
 def jquery(request):
     
     print(request.GET)

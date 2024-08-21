@@ -19,8 +19,9 @@ from django.contrib import admin
 from django.urls import include, path
 
 from django.conf.urls.static import static
-from rest_framework_swagger.views import get_swagger_view
+from myapp.swagger import schema_view
 from drf_yasg.views import get_schema_view
+from rest_framework import routers
 from drf_yasg import openapi
 from rest_framework import permissions
 from django.conf import settings
@@ -33,11 +34,14 @@ from debug_toolbar.toolbar import debug_toolbar_urls
 #     permission_classes=(permissions.AllowAny,),
 # )
 
+router = routers.DefaultRouter()
 
 urlpatterns = [
   
     path('', include('myapp.urls')),
-    path('admin/', admin.site.urls),
+    path('home/admin/clearcache/', include('clearcache.urls')),
+    path('home/admin/', admin.site.urls),
+    path('home/swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     # path('docs/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
 
 ]+debug_toolbar_urls()
